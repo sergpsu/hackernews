@@ -7,13 +7,16 @@ from config import settings
 STORIES_HASH_NAME = 'stories'
 FULL_STORIES_HASH_NAME = 'stories_full'
 
+
 class RedisStoriesMeta(type):
     """metaclass for RedisStories singleton implementation"""
     _instances = {}
 
     def __call__(cls, *args, **kwargs):
         if cls not in cls._instances:
-            cls._instances[cls] = super(RedisStoriesMeta, cls).__call__(*args, **kwargs)
+            cls._instances[cls] = super(
+                RedisStoriesMeta, cls).__call__(
+                *args, **kwargs)
         return cls._instances[cls]
 
 
@@ -38,11 +41,13 @@ class RedisStories(metaclass=RedisStoriesMeta):
     def add(self, story_id, story, full):
         """adds a story to cache"""
         self.redis.hset(
-            STORIES_HASH_NAME if not full else FULL_STORIES_HASH_NAME, story_id, json.dumps(story))
+            STORIES_HASH_NAME if not full else FULL_STORIES_HASH_NAME, story_id,
+            json.dumps(story))
 
     def has(self, story_id, full) -> bool:
         """checks if story is in cache"""
-        return self.redis.hexists(STORIES_HASH_NAME if not full else FULL_STORIES_HASH_NAME, story_id)
+        return self.redis.hexists(
+            STORIES_HASH_NAME if not full else FULL_STORIES_HASH_NAME, story_id)
 
     def get(self, story_id, full):
         """gets story from cache"""

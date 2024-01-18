@@ -70,11 +70,12 @@ class HackerNews:
                 if 'dead' in story and story['dead'] is True:
                     raise HNItemDead(story_id)
 
-                res = {'id': int(story_id),
-                       'title': story['title'],
-                       'text': story['text'] if 'text' in story else story['url'],
-                       'time': story['time']
-                       }
+                res = {
+                    'id': int(story_id),
+                    'title': story['title'],
+                    'text': story['text'] if 'text' in story else
+                    story['url'], 'time': story['time']
+                }
 
                 if full is True and 'kids' in story:
                     comments = []
@@ -86,7 +87,8 @@ class HackerNews:
                 return res
 
     async def _get_comments_tree(self, session, res, ids):
-        tasks = await asyncio.wait([asyncio.Task(self._get_comment_tree(session, comment_id)) for comment_id in ids])
+        tasks = await asyncio.wait([asyncio.Task(
+            self._get_comment_tree(session, comment_id)) for comment_id in ids])
         for task in tasks[0]:
             res.append(task.result())
 
