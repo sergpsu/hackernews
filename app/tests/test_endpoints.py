@@ -1,7 +1,7 @@
+"""testing endpoints"""
 import pytest
-from app import create_app
 from redis_stories import RedisStories
-from config import settings
+from app import create_app
 
 
 @pytest.fixture
@@ -20,7 +20,6 @@ async def server(aiohttp_server):
 @pytest.fixture
 async def client(aiohttp_client, server):
     return await aiohttp_client(server)
-
 
 
 async def test_topstories(client, redis):
@@ -47,6 +46,3 @@ async def test_story1(client, redis):
 
     # now cache contains full story with id=1
     assert redis.has(1, True) is True
-
-
-    
