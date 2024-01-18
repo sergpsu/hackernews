@@ -6,10 +6,9 @@ from config import settings
 
 @pytest.fixture
 def redis():
-    redis = RedisStories(settings.REDIS_HOST,
-                         settings.REDIS_PORT, settings.REDIS_DB)
-    redis.clear()
-    return redis
+    res = RedisStories()
+    res.clear()
+    return res
 
 
 @pytest.fixture
@@ -21,6 +20,7 @@ async def server(aiohttp_server):
 @pytest.fixture
 async def client(aiohttp_client, server):
     return await aiohttp_client(server)
+
 
 
 async def test_topstories(client, redis):
@@ -47,3 +47,6 @@ async def test_story1(client, redis):
 
     # now cache contains full story with id=1
     assert redis.has(1, True) is True
+
+
+    
