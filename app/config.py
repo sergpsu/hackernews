@@ -3,6 +3,8 @@ from pydantic import AnyUrl, AnyHttpUrl, EmailStr, HttpUrl, PostgresDsn, validat
 from pydantic_settings import BaseSettings
 
 class Settings(BaseSettings):
+    HACKERNEWS_API_URL: AnyUrl = 'https://hacker-news.firebaseio.com/v0/'
+    
     REDIS_HOST: str = "127.0.0.1"
     REDIS_PORT: int = 6379
     REDIS_DB: int = 0
@@ -18,7 +20,7 @@ def setup_logger():
     logger.setLevel(level)
     
     handler = logging.StreamHandler()
-    handler.setLevel(logging.DEBUG)
+    #handler.setLevel(logging.DEBUG)
     #handler.setFormatter(logging.Formatter('%(asctime)s [%(levelname)-5s] %(message)s'))
     
     logger.addHandler(handler)

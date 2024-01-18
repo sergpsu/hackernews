@@ -2,8 +2,6 @@ import aiohttp
 import asyncio
 from config import logger, settings
 from redis_stories import RedisStories
-
-BASE_URL = 'https://hacker-news.firebaseio.com/v0/'
 class HackerNews:
     __slots__ = (
         'redis',
@@ -27,7 +25,7 @@ class HackerNews:
                 #logger.info( f'{story=}')
                 
                 if story['type'] != 'story':
-                    raise Exception( f'item {id} is not a story')
+                    raise Exception( f'item {id} is not a story, but {story["type"]}')
                 
                 if 'deleted' in story and story['deleted'] is True:
                     raise Exception( f'story {id} is deleted')
@@ -86,16 +84,13 @@ class HackerNews:
                 for id in ids:
                     tasks.append( asyncio.Task( self.get_story(id, full=False) ) )
                 res = await asyncio.wait( tasks )
-                
-                for task in res[0]:
-                    logger.info(task)
-                
+                                
                 return [task.result() for task in res[0] ]
                 
             
     @staticmethod
     def get_url(uri):
-        return f'{BASE_URL}{uri}.json'
+        return f'{settings.HACKERNEWS_API_URL}{uri}.json'
     
     @staticmethod
     def get_item_url(id):

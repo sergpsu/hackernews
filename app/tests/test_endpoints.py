@@ -1,15 +1,7 @@
 import pytest 
-from aiohttp import web
 from app import create_app
 from redis_stories import RedisStories
 from config import settings
-
-# async def previous(request):
-#     if request.method == 'POST':
-#         request.app[value] = (await request.post())['value']
-#         return web.Response(body=b'thanks for the data')
-#     return web.Response(
-#         body='value: {}'.format(request.app[value]).encode('utf-8'))
 
 @pytest.fixture
 def redis():
@@ -26,13 +18,16 @@ async def server(aiohttp_server):
 async def client(aiohttp_client, server):
     return await aiohttp_client(server)
 
-async def test_topstories(client):
+async def test_topstories(client, redis):
     resp = await client.get('/topstories')
     
     assert resp.status == 200
     
     stories = await resp.json()
     assert len(stories) == 10
+    
+    for story in stories:
+        assert redis.has(story['id'], full=False)
 
 async def test_story1(client, redis):
     #cache is clear

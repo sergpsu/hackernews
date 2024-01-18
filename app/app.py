@@ -5,10 +5,6 @@ from config import logger
 routes = web.RouteTableDef()
 hackernews = HackerNews()
 
-@routes.get('/test')
-async def test(request):
-    return web.json_response({'ok':True})
-
 @routes.get('/topstories')
 async def top_stories(request):
     stories = await hackernews.get_best_stories(10)
