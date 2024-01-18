@@ -1,0 +1,107 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hackernews
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hackernews
+  template:
+    metadata:
+      labels:
+        app: hackernews
+    spec:
+      # nodeName: torrents000
+      containers:
+      - name: hackernews
+        image: docker.io/hackernews/app:local
+        command: ["bash", "/scripts/start.sh"]
+        imagePullPolicy: Never
+        volumeMounts:
+        - name: hackernews-app-volume
+          mountPath: /app
+        - name: hackernews-scripts-volume
+          mountPath: /scripts
+        env:
+        - name: REDIS_HOST
+          value: "$REDIS_HOST"
+        - name: REDIS_PORT
+          value: "$REDIS_PORT"
+        - name: LOG_LEVEL
+          value: "$LOG_LEVEL"
+
+        ports:
+        - name: ssh
+          protocol: TCP
+          containerPort: 22
+        - name: http
+          protocol: TCP
+          containerPort: 8080
+      volumes:
+      - name: hackernews-app-volume
+        hostPath:
+          path: $REPO_PATH/app
+          type: Directory
+      - name: hackernews-scripts-volume
+        hostPath:
+          path: $REPO_PATH/scripts
+          type: Directory
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: redis
+  template:
+    metadata:
+      labels:
+        app: redis
+    spec:
+      containers:
+      - name: redis
+        image: docker.io/redis
+
+        ports:
+        - name: ssh
+          protocol: TCP
+          containerPort: 22
+        - name: redis
+          protocol: TCP
+          containerPort: 6379
+
+
+# ---    
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   name: scheduler
+# spec:
+#   selector:
+#     app: scheduler
+#   ports:
+#   - name: http
+#     targetPort: http
+#     port: 80
+#   - name: debug
+#     targetPort: debug
+#     port: 5678
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis
+spec:
+  selector:
+    app: redis
+  ports:
+  - name: redis
+    targetPort: redis
+    port: 6379
+
