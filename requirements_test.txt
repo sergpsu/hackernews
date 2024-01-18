@@ -1,0 +1,8 @@
+aiohttp
+pydantic
+pydantic-settings
+redis
+
+pytest
+pytest-aiohttp
+pytest-asyncio
