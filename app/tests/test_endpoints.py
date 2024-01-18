@@ -4,21 +4,21 @@ from redis_stories import RedisStories
 from app import create_app
 
 
-@pytest.fixture
-def redis():
+@pytest.fixture(name='redis')
+def redis_f():
     res = RedisStories()
     res.clear()
     return res
 
 
-@pytest.fixture
-async def server(aiohttp_server):
+@pytest.fixture(name='server')
+async def server_f(aiohttp_server):
     app = create_app()
     return await aiohttp_server(app)
 
 
-@pytest.fixture
-async def client(aiohttp_client, server):
+@pytest.fixture(name='client')
+async def client_f(aiohttp_client, server):
     return await aiohttp_client(server)
 
 

@@ -3,14 +3,14 @@ from hackernews import HackerNews, HNItemNotFound, HNItemNotStory
 from redis_stories import RedisStories
 
 
-@pytest.fixture
-def redis():
+@pytest.fixture(name='redis')
+def redis_f():
     res = RedisStories()
     return res
 
 
-@pytest.fixture
-def hn(redis):
+@pytest.fixture(name='hn')
+def hn_f(redis):
     redis.clear()
     return HackerNews()
 
