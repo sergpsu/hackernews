@@ -1,19 +1,18 @@
 import pytest
 from hackernews import HackerNews, HNItemNotFound, HNItemNotStory
-from config import logger, settings
 from redis_stories import RedisStories
 
 
 @pytest.fixture
 def redis():
     res = RedisStories()
-    res.clear()
     return res
 
 
 @pytest.fixture
 def hn(redis):
-    return HackerNews(redis)
+    redis.clear()
+    return HackerNews()
 
 
 async def test_non_existing_item(hn):
@@ -34,6 +33,7 @@ async def test_non_story(hn):
         assert True
     except Exception:
         assert False
+
 
 async def test_redis_singleton():
     r1 = RedisStories()

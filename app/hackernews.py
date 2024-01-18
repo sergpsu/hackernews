@@ -44,8 +44,8 @@ class HackerNews:
         'redis',
     )
 
-    def __init__(self, redis=None):
-        self.redis = redis if redis is not None else RedisStories()
+    def __init__(self):
+        self.redis = RedisStories()
 
     async def get_story(self, story_id, full=False):
         """Get a story by id from redis cache or by calling API.

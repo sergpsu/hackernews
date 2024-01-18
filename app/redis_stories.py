@@ -7,31 +7,24 @@ from config import settings
 STORIES_HASH_NAME = 'stories'
 FULL_STORIES_HASH_NAME = 'stories_full'
 
-
 class RedisStoriesMeta(type):
-    """helper class for singleton implementation"""
+    """metaclass for RedisStories singleton implementation"""
     _instances = {}
 
-    def __call__(cls):
-        """singleton implementation"""
+    def __call__(cls, *args, **kwargs):
         if cls not in cls._instances:
-            instance = super().__call__(host=settings.REDIS_HOST,
-                                        port=settings.REDIS_PORT,
-                                        db=settings.REDIS_DB)
-            cls._instances[cls] = instance
+            cls._instances[cls] = super(RedisStoriesMeta, cls).__call__(*args, **kwargs)
         return cls._instances[cls]
 
 
 class RedisStories(metaclass=RedisStoriesMeta):
-    """implements caching. Use get_instance() to single"""
+    """implements caching. Use RedisStories() to get singleton instance"""
 
-    __slots__ = (
-        'redis',
-    )
-
-    def __init__(self, host, port, db):
+    def __init__(self):
         self.redis = redis.Redis(
-            host=host, port=port, db=db
+            host=settings.REDIS_HOST,
+            port=settings.REDIS_PORT,
+            db=settings.REDIS_DB
         )
 
     def is_ready(self) -> bool:
