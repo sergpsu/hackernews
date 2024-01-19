@@ -1,6 +1,7 @@
+"""HackerNews class tests"""
 import pytest
-from hackernews import HackerNews, HNItemNotFound, HNItemNotStory
 from redis_stories import RedisStories
+from hackernews import HackerNews, HNItemNotFound, HNItemNotStory
 
 
 @pytest.fixture(name='redis')
@@ -18,20 +19,18 @@ def hn_f(redis):
 async def test_non_existing_item(hn):
     try:
         await hn.get_story(0xffffffff)
-        assert False
     except HNItemNotFound:
         assert True
-    except Exception:
+    else:
         assert False
 
 
 async def test_non_story(hn):
     try:
         await hn.get_story(234509)
-        assert False
     except HNItemNotStory:
         assert True
-    except Exception:
+    else:
         assert False
 
 
