@@ -13,9 +13,9 @@ Requires installed prerequisites: ```pip3 install -r ./requirements_test.txt```\
 ```make build```
 
 ## deploy into microk8s
-Requires docker image to be built aleady\
+Requires docker image to be built already\
 ```make deploy```
 
 ## redeploy into microk8s
-Requires docker image to be built aleady\
+Requires docker image to be built already\
 ```make redeploy```
